@@ -1,9 +1,9 @@
 
 import type { User, QuestionnaireAnswers, ChatMessage } from '@/types';
 
-const USER_KEY = 'reflexai-user';
-const QUESTIONNAIRE_KEY_PREFIX = 'reflexai-questionnaire-';
-const CHAT_HISTORY_KEY_PREFIX = 'reflexai-chat-';
+const USER_KEY = 'Therapie-user';
+const QUESTIONNAIRE_KEY_PREFIX = 'Therapie-questionnaire-';
+const CHAT_HISTORY_KEY_PREFIX = 'Therapie-chat-';
 
 export const authStore = {
   setUser: (user: User) => {

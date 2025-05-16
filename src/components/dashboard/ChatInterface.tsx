@@ -102,7 +102,7 @@ export function ChatInterface({ currentUser }: ChatInterfaceProps) {
   return (
     <Card className="w-full h-full flex flex-col shadow-lg">
       <CardHeader>
-        <CardTitle className="text-xl">Chat with ReflexAI</CardTitle>
+        <CardTitle className="text-xl">Chat with Therapie</CardTitle>
       </CardHeader>
       <CardContent className="flex-grow overflow-hidden p-0">
         <ScrollArea className="h-full p-4" ref={scrollAreaRef}>

@@ -42,7 +42,7 @@ export function AuthForm({ mode, onSubmit, isLoading, footer }: AuthFormProps) {
   });
 
   const title = mode === "login" ? "Welcome Back!" : "Create an Account";
-  const description = mode === "login" ? "Sign in to continue your journey with ReflexAI." : "Join ReflexAI to start your personalized wellness experience.";
+  const description = mode === "login" ? "Sign in to continue your journey with Therapie." : "Join Therapie to start your personalized wellness experience.";
   const buttonText = mode === "login" ? "Login" : "Register";
 
   return (

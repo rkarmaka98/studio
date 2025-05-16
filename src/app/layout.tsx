@@ -9,7 +9,7 @@ const geistSans = GeistSans;
 const geistMono = GeistMono;
 
 export const metadata: Metadata = {
-  title: 'ReflexAI',
+  title: 'Therapie',
   description: 'Personalized mental wellness companion',
 };
 

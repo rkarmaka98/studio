@@ -48,7 +48,7 @@ export function QuestionnaireForm({ onSubmit, isLoading }: QuestionnaireFormProp
     <Card className="w-full max-w-2xl shadow-xl">
       <CardHeader>
         <CardTitle className="text-3xl font-bold">Tell Us About Yourself</CardTitle>
-        <CardDescription>Your responses will help us personalize your ReflexAI experience. This is a one-time setup.</CardDescription>
+        <CardDescription>Your responses will help us personalize your Therapie experience. This is a one-time setup.</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>

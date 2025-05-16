@@ -28,7 +28,7 @@ export default function RegisterPage() {
           questionnaireCompleted: false,
         };
         authStore.setUser(newUser);
-        toast({ title: "Registration Successful", description: "Welcome to ReflexAI! Let's get to know you." });
+        toast({ title: "Registration Successful", description: "Welcome to Therapie! Let's get to know you." });
         router.push("/questionnaire");
       } else {
         toast({ title: "Registration Failed", description: result.message, variant: "destructive" });

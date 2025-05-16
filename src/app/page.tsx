@@ -29,7 +29,7 @@ export default function AuthPage() {
         <Logo size={60} className="mx-auto text-primary-foreground" />
         
         <h1 className="text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl">
-          Welcome to ReflexAI
+          Welcome to Therapie
         </h1>
         <p className="text-xl text-muted-foreground">
           Your personalized companion for mental wellness and self-reflection.

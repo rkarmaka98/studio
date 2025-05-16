@@ -25,7 +25,7 @@ export function Logo(props: SVGProps<SVGSVGElement> & { size?: number; className
         <path d="M17.73 11A4.5 4.5 0 0 1 21 14.27V18a2 2 0 0 1-2 2h-1" stroke="hsl(var(--accent-foreground))"/>
         <path d="M6.27 11A4.5 4.5 0 0 0 3 14.27V18a2 2 0 0 0 2 2h1" stroke="hsl(var(--accent-foreground))"/>
       </svg>
-      <span className="text-2xl font-semibold text-foreground">ReflexAI</span>
+      <span className="text-2xl font-semibold text-foreground">Therapie</span>
     </div>
   );
 }

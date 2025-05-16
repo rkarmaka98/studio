@@ -1,4 +1,4 @@
-# **App Name**: ReflexAI
+# **App Name**: Therapie
 
 ## Core Features:
 
