@@ -7,7 +7,8 @@ import { QuestionnaireForm } from "@/components/QuestionnaireForm";
 import { useToast } from "@/hooks/use-toast";
 import { submitQuestionnaire } from "@/lib/actions";
 import { authStore } from "@/lib/authStore";
-import type { QuestionnaireAnswers }_NEW_LINE_import { Logo } from "@/components/Logo";
+import type { QuestionnaireAnswers } from "@/types/index";
+import { Logo } from "@/components/Logo";
 import { Loader2 } from "lucide-react";
 
 export default function QuestionnairePage() {
