@@ -17,42 +17,35 @@ export default function LoginPage() {
 
   const handleSubmit = async (values: { username: string; password?: string }) => {
     setIsLoading(true);
-    // Simulate login
+    // Simulate login API call
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Mock login: check if user exists (even if it's just a new mock user for demo)
-    // In a real app, this would call a server action to verify credentials.
-    // For this mock, we'll assume any valid username format is a "login"
-    // and create a mock user session.
-    
-    const mockUserId = `user_${Date.now()}_${values.username.toLowerCase()}`;
-    // Try to retrieve existing user data, or create new if "logging in" for the first time in mock
-    let user = authStore.getUser(); // This would typically be a server check
-    let questionnaireCompleted = false;
+    const storedUser = authStore.getUser();
+    let sessionUser: User;
 
-    if (user && user.username.toLowerCase() === values.username.toLowerCase()) {
-      // User "exists" in localStorage from a previous session/registration
-      questionnaireCompleted = user.questionnaireCompleted;
+    if (storedUser && storedUser.username.toLowerCase() === values.username.toLowerCase()) {
+      // User exists in localStorage and username matches - this is our "existing" user.
+      sessionUser = storedUser; // Use the complete user object from storage.
+      toast({ title: "Login Successful", description: `Welcome back, ${sessionUser.username}!` });
     } else {
-      // Simulate a "new" login - in a real app this means credentials matched an existing user.
-      // For mock, we might not have questionnaire for this "login".
-      const storedQuestionnaire = authStore.getQuestionnaire(mockUserId);
-      questionnaireCompleted = !!storedQuestionnaire;
+      // No user in localStorage, or username does not match.
+      // For this mock, we treat this as a new session for the entered username.
+      // In a real app, this would typically be a failed login if credentials didn't match a DB record.
+      const newUserId = `user_${Date.now()}_${values.username.toLowerCase().replace(/\s+/g, '_')}`;
+      sessionUser = {
+        id: newUserId,
+        username: values.username,
+        questionnaireCompleted: false, // New "session" or "user", questionnaire not yet completed.
+      };
+      // This effectively replaces any previously stored user in the single-user mock.
+      toast({ title: "Login Successful", description: `Welcome, ${sessionUser.username}! Let's get you set up.` });
     }
     
-    const loggedInUser: User = {
-      id: user?.id || mockUserId, // Prefer existing ID if user "matched"
-      username: values.username,
-      questionnaireCompleted: questionnaireCompleted,
-    };
-    authStore.setUser(loggedInUser);
+    authStore.setUser(sessionUser); // Set the determined user (either existing or new for the mock)
 
-    toast({ title: "Login Successful", description: `Welcome back, ${values.username}!` });
-
-    if (loggedInUser.questionnaireCompleted) {
+    if (sessionUser.questionnaireCompleted) {
       router.push("/dashboard");
     } else {
-      // If somehow a user logs in but hasn't completed questionnaire (e.g. direct navigation in mock)
       router.push("/questionnaire");
     }
     
