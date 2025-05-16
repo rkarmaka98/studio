@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, Loader2, RefreshCw } from "lucide-react";
@@ -10,10 +9,25 @@ import type { MentalStateVisualizationData, User } from "@/types";
 import { generateMentalStateVisualization } from "@/lib/actions";
 import { authStore } from "@/lib/authStore";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig
+} from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, Cell, ResponsiveContainer } from "recharts";
 
 interface MentalStateVisualizationProps {
   currentUser: User;
 }
+
+const chartConfig = {
+  happy: { label: "Happy", color: "hsl(var(--chart-1))" },
+  sad: { label: "Sad", color: "hsl(var(--chart-2))" },
+  anxiety: { label: "Anxiety", color: "hsl(var(--chart-3))" },
+  anger: { label: "Anger", color: "hsl(var(--chart-4))" },
+  depressed: { label: "Depressed", color: "hsl(var(--chart-5))" },
+} satisfies ChartConfig;
 
 export function MentalStateVisualization({ currentUser }: MentalStateVisualizationProps) {
   const [visualizationData, setVisualizationData] = useState<MentalStateVisualizationData | null>(null);
@@ -75,23 +89,40 @@ export function MentalStateVisualization({ currentUser }: MentalStateVisualizati
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        {!isLoading && !error && visualizationData && (
-          <div className="space-y-4 w-full">
-            {visualizationData.visualizationDataUri.startsWith('data:image/') ? (
-              <Image
-                src={visualizationData.visualizationDataUri}
-                alt="Mental State Visualization"
-                width={500}
-                height={300}
-                className="rounded-md border object-contain mx-auto shadow-md"
-                data-ai-hint="abstract chart"
-              />
-            ) : (
-               <div className="text-center p-4 border rounded-md bg-muted">
-                 <p className="text-muted-foreground">Visualization data received, but it's not a displayable image URI.</p>
-                 <p className="text-xs truncate mt-2">{visualizationData.visualizationDataUri.substring(0,100)}...</p>
-               </div>
-            )}
+        {!isLoading && !error && visualizationData && visualizationData.barChartData && (
+          <div className="space-y-4 w-full h-[350px]"> {/* Added height for chart container */}
+            <ChartContainer config={chartConfig} className="w-full h-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart 
+                  data={visualizationData.barChartData} 
+                  layout="vertical"
+                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+                  <XAxis type="number" domain={[0, 10]} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+                  <YAxis 
+                    dataKey="metric" 
+                    type="category" 
+                    width={80} 
+                    tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label || value}
+                    tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }}
+                  />
+                  <ChartTooltip
+                    cursor={{ fill: "hsl(var(--accent) / 0.2)" }}
+                    content={<ChartTooltipContent />} 
+                  />
+                  {/* <Legend /> // Legend might be redundant if Y-axis labels are clear */}
+                  <Bar dataKey="score" radius={[0, 4, 4, 0]}>
+                    {visualizationData.barChartData.map((entry) => (
+                      <Cell 
+                        key={`cell-${entry.metric}`} 
+                        fill={chartConfig[entry.metric as keyof typeof chartConfig]?.color || 'hsl(var(--primary))'} 
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
             <Card className="bg-muted/50">
               <CardHeader>
                 <CardTitle className="text-lg">Analysis Summary</CardTitle>
@@ -102,7 +133,7 @@ export function MentalStateVisualization({ currentUser }: MentalStateVisualizati
             </Card>
           </div>
         )}
-        {!isLoading && !error && !visualizationData && (
+        {!isLoading && !error && (!visualizationData || !visualizationData.barChartData) && (
             <p className="text-muted-foreground">No visualization data available at the moment.</p>
         )}
       </CardContent>

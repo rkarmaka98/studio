@@ -25,6 +25,9 @@ export interface MentalStateAnalysis {
 }
 
 export interface MentalStateVisualizationData {
-  visualizationDataUri: string;
+  barChartData: Array<{
+    metric: string;
+    score: number;
+  }>;
   analysisSummary: string;
 }
