@@ -5,7 +5,7 @@ import type { SVGProps } from 'react';
 export function Logo(props: SVGProps<SVGSVGElement> & { size?: number; className?: string }) {
   const { size = 40, className, ...rest } = props;
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-1">
        <svg
         xmlns="http://www.w3.org/2000/svg"
         width={size}
