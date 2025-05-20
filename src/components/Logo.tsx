@@ -1,23 +1,23 @@
 
-import { Brain } from 'lucide-react';
 import type { SVGProps } from 'react';
+import { cn } from '@/lib/utils';
 
 export function Logo(props: SVGProps<SVGSVGElement> & { size?: number; className?: string }) {
-  const { size = 40, className, ...rest } = props;
+  const { size = 40, className, ...rest } = props; // className is now for the container div, ...rest for the SVG
   return (
-    <div className="flex items-center space-x-1">
+    <div className={cn("flex items-center space-x-1", className)}> {/* Apply className to the root div */}
        <svg
         xmlns="http://www.w3.org/2000/svg"
         width={size}
         height={size}
         viewBox="0 0 24 24"
         fill="none"
-        stroke="currentColor"
+        stroke="currentColor" // Will inherit from parent div if text-primary-foreground is set, but paths below have specific colors
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className={className}
-        {...rest}
+        // Removed className={className} from here, specific SVG classes could be a new prop if needed
+        {...rest} // Pass other SVGProps (like id, specific event handlers if any) to svg
       >
         <path d="M12 2a4 4 0 0 0-4 4c0 3 4 6 4 6s4-3 4-6a4 4 0 0 0-4-4Z" fill="hsl(var(--primary))" stroke="hsl(var(--primary-foreground))"/>
         <path d="M14.5 9.5A7.5 7.5 0 0 0 7 15.25V18a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-2.75A7.5 7.5 0 0 0 14.5 9.5Z" fill="hsl(var(--accent))" stroke="hsl(var(--accent-foreground))"/>
