@@ -143,7 +143,84 @@ This page houses the main interactive elements: Chat and Mental State Visualizat
     *   Each metric has a dedicated bar and color defined in `chartConfig`.
 6.  The `analysisSummary` is displayed below the chart.
 
-## 5. AI Integration with Genkit
+## 5. Visual Architectural Overview (Mermaid)
+
+```mermaid
+flowchart TD
+    subgraph User Interaction (Browser)
+        U[User]
+        direction LR
+        LP[Landing Page: /] -->|Login/Register| AP[Auth Pages: /login, /register]
+        AP --> AuthForm[AuthForm Component]
+        QP[Questionnaire Page: /questionnaire] --> QF[QuestionnaireForm Component]
+        DP[Dashboard Page: /dashboard] --> CI[ChatInterface Component]
+        DP --> MSV[MentalStateVisualization Component]
+    end
+
+    subgraph Client-Side (Next.js Frontend + localStorage)
+        direction LR
+        AuthForm --> LA[Login/Register Actions (Client)]
+        QF --> SQA[Submit Questionnaire (Client)]
+        CI --> HCA[Handle Chat (Client)]
+        MSV --> GVA[Get Visualization (Client)]
+        
+        subgraph LocalStorage [localStorage via authStore.ts]
+            direction TB
+            LS_User[User Session]
+            LS_Q[Questionnaire Data]
+            LS_Chat[Chat History]
+        end
+        LA --> LS_User
+        SQA --> LS_Q
+        SQA --> LS_User
+        HCA --> LS_Chat
+        GVA --> LS_Q
+        GVA --> LS_Chat
+    end
+
+    subgraph Server-Side (Next.js Server Actions & Genkit AI)
+        direction LR
+        SA[Server Actions: src/lib/actions.ts]
+        subgraph GenkitFlows [Genkit Flows: src/ai/flows/]
+            direction TB
+            MSA[Mental State Analysis Flow]
+            PCI[Personalized Chat Flow]
+            VMS[Visualize Mental State Flow]
+        end
+        GM[Gemini AI Model]
+
+        SA -- registerUser --> MockAuth[Mock User Creation]
+        SA -- submitQuestionnaire --> MSA
+        MSA -- analyze --> GM
+        MSA --> SA_Q_Result[Questionnaire Analysis Result]
+
+        SA -- handleChatInteraction --> PCI
+        PCI -- questionnaire, history, input --> GM
+        PCI --> SA_Chat_Resp[AI Chat Response]
+
+        SA -- generateMentalStateVisualization --> VMS
+        VMS -- questionnaire, history --> GM
+        VMS --> SA_Vis_Data[Visualization Data & Summary]
+    end
+
+    U --> LP
+    LA ==> SA
+    SQA ==> SA
+    HCA ==> SA
+    GVA ==> SA
+    
+    SA_Q_Result ==> SQA
+    SA_Chat_Resp ==> HCA
+    SA_Vis_Data ==> GVA
+
+    style U fill:#f9f,stroke:#333,stroke-width:2px
+    style LocalStorage fill:#lightgrey,stroke:#333,stroke-width:2px
+    style GenkitFlows fill:#ADD8E6,stroke:#333,stroke-width:2px
+    style GM fill:#90EE90,stroke:#333,stroke-width:2px
+    style SA fill:#FFFFE0,stroke:#333,stroke-width:2px
+```
+
+## 6. AI Integration with Genkit
 
 *   **Global AI Object (`src/ai/genkit.ts`):** Initializes Genkit with the `googleAI` plugin, specifying the `gemini-2.0-flash` model by default.
 *   **Flows (`src/ai/flows/*.ts`):**
@@ -160,7 +237,7 @@ This page houses the main interactive elements: Chat and Mental State Visualizat
     *   **Exported Wrapper Function:** An async function is exported from each flow file. This function is what Server Actions call. It simply invokes the defined flow with the input and returns the processed output. This pattern decouples the Server Action from Genkit's internal flow execution mechanism.
 *   **Calling Flows:** Server Actions in `src/lib/actions.ts` import and call these exported wrapper functions from the flow files, passing the necessary data.
 
-## 6. Styling and UI
+## 7. Styling and UI
 
 *   **Tailwind CSS:** Used for all styling. Utility classes are applied directly in JSX.
 *   **`src/app/globals.css`:**
@@ -170,7 +247,7 @@ This page houses the main interactive elements: Chat and Mental State Visualizat
 *   **ShadCN UI Components:** Pre-built components from `src/components/ui/` are used extensively. They are styled with Tailwind and adhere to the theme defined in `globals.css`.
 *   **`cn` utility (`src/lib/utils.ts`):** Merges Tailwind classes, useful for conditional class application.
 
-## 7. Low-Level Design Considerations & Patterns
+## 8. Low-Level Design Considerations & Patterns
 
 *   **Server Components by Default:** Next.js App Router encourages Server Components, reducing client-side JavaScript. Client Components (`"use client";`) are used only when necessary (e.g., for interactivity, hooks like `useState`, `useEffect`).
 *   **Server Actions for Mutations:** Data fetching for display can happen in Server Components, while mutations (login, submit questionnaire, send chat) are handled by Server Actions. This simplifies backend interactions.
