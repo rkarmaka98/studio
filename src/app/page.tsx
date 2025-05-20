@@ -25,13 +25,13 @@ export default function AuthPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-background to-primary/30 p-4">
-      <div className="text-center space-y-8 max-w-lg">
+      <div className="flex flex-col items-center space-y-8 max-w-lg"> {/* Changed from text-center */}
         <Logo size={60} className="mx-auto text-primary-foreground" />
         
-        <h1 className="text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl">
+        <h1 className="text-5xl font-extrabold tracking-tight text-foreground sm:text-6xl text-center"> {/* Added text-center here for explicitness if needed for h1's internal text, though items-center centers the block */}
           Welcome to Therapie
         </h1>
-        <p className="text-xl text-muted-foreground">
+        <p className="text-xl text-muted-foreground text-center"> {/* Added text-center here */}
           Your personalized companion for mental wellness and self-reflection.
         </p>
         
@@ -47,7 +47,7 @@ export default function AuthPage() {
             </Link>
           </Button>
         </div>
-        <p className="text-sm text-muted-foreground pt-8">
+        <p className="text-sm text-muted-foreground pt-8 text-center"> {/* Added text-center here */}
           Discover insights, track your mood, and engage in meaningful conversations tailored just for you.
         </p>
       </div>
